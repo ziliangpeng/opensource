@@ -21,7 +21,7 @@ One directory per project:
 
 ## Index
 
-- [`vllm_0.16.0/`](./vllm_0.16.0/) — vLLM v0.16.0: engine core, scheduler, worker, attention backends (FlashAttn / FlashInfer / Triton / ROCm AITER), KV transfer, MoE, paged attention, divisibility constraints.
+- [`vllm_0.16.0/`](./vllm_0.16.0/) — vLLM v0.16.0 (released 2026-02-25): engine core, scheduler, worker, attention backends (FlashAttn / FlashInfer / Triton / ROCm AITER), KV transfer, MoE, paged attention, divisibility constraints.
 
 ## License
 
