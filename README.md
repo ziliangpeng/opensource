@@ -21,9 +21,11 @@ One directory per project:
 
 ## Index
 
+- [`AI_AGENT_COMPARISON.md`](./AI_AGENT_COMPARISON.md) — Architecture and feature comparison of major open-source AI agents (Hermes, OpenClaw, OpenCode, Claude Code, Codex CLI).
+- [`PRINCIPLES.md`](./PRINCIPLES.md) — Repository reading methodology and conventions.
 - [`vllm_0.16.0/`](./vllm_0.16.0/) — vLLM v0.16.0 (released 2026-02-25): engine core, scheduler, worker, attention backends (FlashAttn / FlashInfer / Triton / ROCm AITER), KV transfer, MoE, paged attention, divisibility constraints.
-|- [`hermes_agent_v0.14.0/`](./hermes_agent_v0.14.0/) — NousResearch/hermes-agent v0.14.0 / v2026.5.16: CLI agent, gateway (Telegram / Discord / etc.), ACP, Kanban, cron, multi-provider routing, TUI. *(in progress)*
-|- [`prime_rl_v0.5.0/`](./prime_rl_v0.5.0/) — PrimeIntellect-ai/prime-rl v0.5.0 (released 2026-03-30): async RL training (FSDP2 + vLLM), PD-disaggregated inference, MoE EP / context parallelism, verifiers environment integration. *(skeleton)*
+- [`hermes_agent_v0.14.0/`](./hermes_agent_v0.14.0/) — NousResearch/hermes-agent v0.14.0 / v2026.5.16: CLI agent, gateway (Telegram / Discord / etc.), ACP, Kanban, cron, multi-provider routing, TUI. *(in progress)*
+- [`prime_rl_v0.5.0/`](./prime_rl_v0.5.0/) — PrimeIntellect-ai/prime-rl v0.5.0 (released 2026-03-30): async RL training (FSDP2 + vLLM), PD-disaggregated inference, MoE EP / context parallelism, verifiers environment integration. *(skeleton)*
 
 ## License
 
