@@ -26,3 +26,14 @@ The risk profile:
 The real difference: **shell runs exactly what you type; LLM runs what it interprets from what you type.** Hallucination, misinterpretation, or prompt injection are the real risk vectors — not the YOLO flag itself.
 
 Related: the fork's security patches (`file-safety`, control-plane write-deny) address one aspect of this — protecting Hermes' own configuration files from prompt-injection attacks.
+
+## Session search and cross-session continuity
+
+Hermes uses **FTS5 full-text search** (via `hermes_state.py`) for cross-session recall — not just keyword matching, but LLM-enhanced retrieval. This enables a design where:
+
+- Each session stays **focused on one task** — no need to keep everything in one long context
+- Cross-session continuity comes from `session_search` + `agent-kb` + skills, not from cramming all history into the same session
+- The user can ask on any platform (Telegram, CLI, etc.) and the agent retrieves context from sessions on other platforms
+- The `session_id` printed at the end of each session is a reference handle for resume and recall
+
+This is the architectural opposite of "keep everything in memory" — data is persisted but **not actively loaded** unless queried. It aligns with the memory anti-bloat principle: memory = short universal triggers, agent-kb = declarative facts, session_search = episodic recall.
