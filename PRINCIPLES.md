@@ -79,7 +79,10 @@ Deliverable: `design_notes.md` — design decisions, patterns, and open question
 
 ## Scope boundaries
 
-- One directory per project+version (e.g. `vllm_0.16.0/`, `hermes_agent_v0.14.0/`).
+- One directory per project (e.g. `vllm_0.16.0/`, `hermes_agent_v0.14.0/`, `triton/`).
+- **Versioned folders** (`<project>_<version>/`) are for **code deep-dives and walkthroughs** — tracing request lifecycles, reading source files, understanding the architecture at the code level. These are version-pinned because code changes between releases.
+- **Unversioned folders** (`<project>/` without a version suffix) are for **general project reference** — project history, release evolution, contributor analysis, study roadmaps, architecture overviews, and any information that spans multiple versions or isn't tied to a specific code snapshot.
+- A project can have both: an unversioned folder for reference materials and a versioned folder for a specific release's code walkthrough.
 - Focus on **what the project's authors consider hard** — the code that had the most PRs, the most comments, the most complex test setup.
 - Document what you **don't** understand as much as what you do. Open questions are valuable.
 
