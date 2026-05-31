@@ -93,20 +93,66 @@ Latest release. 62.4M monthly PyPI downloads — on par with PyTorch in ecosyste
 
 ## Top 10 Contributors (by commit count)
 
-| # | Name | Commits | Role / Affiliation |
-|---|------|---------|--------------------|
-| 1 | **Philippe Tillet** | 715 | Creator, project lead, OpenAI |
-| 2 | **Keren Zhou** | 566 | Core compiler engineer |
-| 3 | **Thomas Raoux** | 438 | MLIR / codegen, NVIDIA |
-| 4 | **peterbell10** | 309 | CUDA backend, optimizations |
-| 5 | **Jeff Niu** | 272 | MLIR dialect / modular compiler |
-| 6 | **Mario Lezcano Casado** | 253 | PyTorch interop, testing |
-| 7 | **Lei Zhang** | 199 | MLIR / codegen infrastructure |
-| 8 | **pawelszczerbuk** | 167 | Backend / infrastructure |
-| 9 | **Justin Lebar** | 131 | NVIDIA, CUDA optimization |
-| 10 | **Alexander Weinrauch** | 130 | ROCm / AMD backend |
+### 1. Philippe Tillet — 715 commits
 
-Other notable contributors: Anatoly Myachev (108), Zahi Moudallal (96, AMD), Kyle Wang (63), neildhar (57), Hongtao Yu (56, AMD), apgoucher (53).
+**The creator.** Started Triton as a PhD student at Harvard (advisor: H.T. Kung), where he first built ISAAC (2016), an ML-driven kernel selection library. Published the MAPL 2019 paper "Triton: An Intermediate Language and Compiler for Tiled Neural Network Computations" (17K+ citations). After graduating in 2020, joined OpenAI Research and led the ground-up rewrite of Triton from a C+LLVM prototype into the Python+MLIR compiler we know today. Still leads the Triton project at OpenAI as Member of Technical Staff. Also co-authored NVIDIA's blog on Triton on Blackwell. GitHub: [@ptillet](https://github.com/ptillet).
+
+### 2. Keren Zhou (周可人) — 566 commits
+
+Core compiler engineer on the Triton team. Previously at OpenAI; now **Assistant Professor at George Mason University**, leading the CAT Lab (Compiler, Architecture, and Tools). PhD from Rice University. Built **Proton**, a multi-level adaptive profiler for Triton kernels, and **Triton-Sanitizer**, a device-agnostic memory sanitizer. Co-author of the **Linear Layouts** paper (arXiv 2505.23819) that redesigned Triton's tensor layout system. GitHub: [@Jokeren](https://github.com/Jokeren).
+
+### 3. Thomas Raoux — 438 commits
+
+Triton compiler team at OpenAI. Deep expertise in MLIR-based code generation — works on the Triton→MLIR→LLVM pipeline, GPU dialect lowering, and Hopper-specific features (TMA, cluster kernels). Previously at NVIDIA on MLIR infrastructure. His GitHub also shows contributions to IREE (Google's MLIR compiler). GitHub: [@ThomasRaoux](https://github.com/ThomasRaoux).
+
+### 4. peterbell10 (Peter Bell) — 309 commits
+
+Member of Technical Staff at OpenAI on the Triton compiler team. Major contributor to the CUDA backend — kernel launch infrastructure, memory model, code generation. Prior to OpenAI was a staff software engineer working on GPU-accelerated scientific computing (radiative transfer, spatial data structures). Author on NVIDIA Technical Blog. GitHub: [@peterbell10](https://github.com/peterbell10).
+
+### 5. Jeff Niu (Mogball) — 272 commits
+
+Member of Technical Staff at OpenAI. Self-describes as a "TensorFlow refugee married to MLIR." Built **triton_lite**, a Triton clone in Mojo, at Modular. Works on Triton's MLIR dialect architecture — the modular compiler design that allows Triton to target multiple backends (CUDA, HIP, CPU). University of Waterloo alumni. GitHub: [@Mogball](https://github.com/Mogball).
+
+### 6. Mario Lezcano Casado (Lezcano) — 253 commits
+
+Member of Technical Staff at OpenAI. Previously **tech lead of the PyTorch core dev team at Quansight** (the company that maintains PyTorch core alongside Meta). Core PyTorch developer working on `torch.compile`, TorchDynamo, TorchInductor, `torch.linalg`, and autodiff. His Triton contributions are at the PyTorch–Triton boundary: making sure `torch.compile` generates correct and efficient Triton kernels. PhD from University of Oxford. GitHub: [@Lezcano](https://github.com/Lezcano).
+
+### 7. Lei Zhang (antiagainst) — 199 commits
+
+**Senior Manager at AMD**, leading an AI compiler/runtime team. GitHub handle `antiagainst`. Works on Triton, IREE, MLIR, and LLVM. Before AMD, worked on SPIR-V, Vulkan, and Metal graphics standards. Author on the ROCm Blogs (e.g., "Unleash Full GPU Potential: Overlap Communication and Computation with Triton-Distributed"). Also involved in ByteDance-Seed's **Triton-distributed** project. His presence in the top 10 reflects AMD's deep investment in Triton as a compiler platform. GitHub: [@antiagainst](https://github.com/antiagainst).
+
+### 8. pawelszczerbuk (Paweł Szczerbuk) — 167 commits
+
+Member of Technical Staff at OpenAI on the Triton compiler team. Career dedicated to GPU compiler development. Core owner of Triton's **software pipelining pass** (pipeline scheduler) — the pass that overlaps global memory loads with computation (`num_stages`). Frequently cc'd on pipeline-related issues and bugs. Author on NVIDIA Technical Blog. GitHub: [@pawelszczerbuk](https://github.com/pawelszczerbuk).
+
+### 9. Justin Lebar (jlebar) — 131 commits
+
+Decade-long compiler engineer across **Google, Waymo, and OpenAI**. Worked on CUDA support in clang, XLA:GPU, Triton, and OpenAI's custom hardware. Recently made waves with a blog post on *Semianalysis* about spending $10K+ running AI agents (Codex CLI) over Triton's C++ codebase to find miscompilations — finding hundreds of plausible bugs, several of which were confirmed and fixed. Known for a meticulous, correctness-obsessed engineering style. GitHub: [@jlebar](https://github.com/jlebar).
+
+### 10. Alexander Weinrauch — 130 commits
+
+**Senior Software Development Engineer at AMD.** PhD in Computer Science focused on High Performance Computing and Computer Graphics. The top AMD engineer contributing to Triton's **HIP/ROCm backend** — making Triton work on AMD GPUs. His work covers the HIP runtime integration, AMDGPU LLVM target lowering, and GPU-specific optimizations for CDNA architectures. GitHub: [@alexweinrauch](https://github.com/alexweinrauch).
+
+---
+
+### Other notable contributors
+
+| Name | Commits | Notes |
+|------|---------|-------|
+| Anatoly Myachev | 108 | Triton compiler, backend infrastructure |
+| Zahi Moudallal | 96 | AMD, HIP/ROCm backend |
+| Kyle Wang | 63 | AMD, Triton-distributed, ROCm |
+| neildhar | 57 | Kernel optimizations |
+| Hongtao Yu (htyu) | 56 | AMD, compiler passes |
+| apgoucher (Adam Goucher) | 53 | Linear layouts co-author, mathematical foundations |
+
+### Affiliations summary
+
+| Organization | Key contributors |
+|-------------|-----------------|
+| **OpenAI** (Triton team) | Philippe Tillet, Thomas Raoux, Peter Bell, Jeff Niu, Mario Lezcano, Paweł Szczerbuk, Justin Lebar, Keren Zhou (formerly) |
+| **AMD** | Lei Zhang, Alexander Weinrauch, Zahi Moudallal, Kyle Wang, Hongtao Yu |
+| **Academia** | Keren Zhou (George Mason University, current), Philippe Tillet (Harvard, former PhD) |
 
 ---
 
