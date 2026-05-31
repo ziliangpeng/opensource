@@ -142,23 +142,283 @@ Decade-long compiler engineer across **Google, Waymo, and OpenAI**. Worked on CU
 | Anatoly Myachev | 108 | Triton compiler, backend infrastructure |
 | Zahi Moudallal | 96 | AMD, HIP/ROCm backend |
 | Kyle Wang | 63 | AMD, Triton-distributed, ROCm |
-| neildhar | 57 | Kernel optimizations |
-| Hongtao Yu (htyu) | 56 | AMD, compiler passes |
+| neildhar | 57 | Kernel optimizations, PyTorch-Triton integration |
+| Hongtao Yu (htyu) | 56 | AMD, compiler passes, automatic warp specialization |
 | apgoucher (Adam Goucher) | 53 | Linear layouts co-author, mathematical foundations |
+
+### Ranks 11–20 in detail
+
+#### 11. Anatoly Myachev — 108 commits
+OpenAI Triton compiler team. Works on build system, CI, and backend infrastructure — the unglamorous but essential work that makes the compiler compilable and testable.
+
+#### 12. Zahi Moudallal — 96 commits
+**AMD engineer.** Core developer of the Triton HIP/ROCm backend. Making Triton actually work on AMD GPUs.
+
+#### 13. Kyle Wang — 63 commits
+**AMD software engineer.** Primary contributor to **Triton-distributed**, the extension that enables computation-communication overlap for distributed Triton kernels. Co-author with Lei Zhang on ROCm Blogs.
+
+#### 14. Lixun Zhang — 60 commits
+**AMD compiler engineer.** Tsinghua BS, UT Austin PhD (automatic code generation + GPU optimization). Works with Lei Zhang on Triton for AMD GPUs, focusing on chiplet architecture optimization and instruction scheduling.
+
+#### 15. neildhar — 57 commits
+Kernel optimization and PyTorch-Triton integration. Visible in PyTorch issues fixing `torch.compile` + Triton bugs. Specific affiliation unclear.
+
+#### 16. Ilya V (joviliast) — 56 commits
+Likely Intel-related. Forks ROCm/Triton, possibly working on Intel GPU Triton backend. Identity unclear.
+
+#### 17. Hongtao Yu (htyu) — 56 commits
+**AMD compiler engineer**, highly active. Designer and implementer of **Automatic Warp Specialization (autoWS)** — the compiler pass that automatically splits warps into roles (some load data, others compute) without developer-written synchronization. Also proposed **TLX**, a minimally invasive extension to Triton that adds explicit multi-warp orchestration only where needed. Author of the PyTorch blog post on autoWS design and roadmap.
+
+#### 18. Alexander Efimov (binarman) — 54 commits
+Backend and build infrastructure contributor.
+
+#### 19. apgoucher (Adam Goucher) — 53 commits
+**Linear Layouts co-author** (ASPLOS 2026 paper). Provided the F₂ vector space algebraic framework that unified Triton's tensor layout description. Role is more mathematician/researcher than compiler engineer. (Not the Olympic runner of the same name.)
+
+#### 20. Phil Tillet — 46 commits
+Same person as **Philippe Tillet** (#1). Git author string inconsistency ("Philippe Tillet" vs "Phil Tillet") split the count. True total: 715 + 46 = **761 commits**.
+
+### Ranks 21–30 summary
+
+| # | Name | Commits | Notes |
+|---|------|---------|-------|
+| 21 | Yi Qian | 45 | AMD, ROCm-related |
+| 22 | Pengzhan Zhao | 45 | Academia (UIUC?), ML compiler research |
+| 23 | Maksim Levental | 44 | Independent MLIR/compiler researcher; built nelli (MLIR frontend) |
+| 24 | masahi | 40 | Intel GPU backend |
+| 25 | Christian Sigg | 40 | NVIDIA, PhD ETH Zurich, MLIR |
+| 26 | Thomas | 38 | Possibly Thomas Raoux alias |
+| 27 | Jungwook Park | 37 | AMD, Senior AI GPU Compiler Engineer |
+| 28 | Tori Baker | 31 | Triton runtime/infra |
+| 29 | Nick Riasanovsky | 31 | — |
+| 30 | Corbin Robeck | 31 | — |
 
 ### Affiliations summary
 
 | Organization | Key contributors |
 |-------------|-----------------|
-| **OpenAI** (Triton team) | Philippe Tillet, Thomas Raoux, Peter Bell, Jeff Niu, Mario Lezcano, Paweł Szczerbuk, Justin Lebar, Keren Zhou (formerly) |
-| **AMD** | Lei Zhang, Alexander Weinrauch, Zahi Moudallal, Kyle Wang, Hongtao Yu |
+| **OpenAI** (Triton team) | Philippe Tillet, Thomas Raoux, Peter Bell, Jeff Niu, Mario Lezcano, Paweł Szczerbuk, Justin Lebar, Anatoly Myachev, Keren Zhou (formerly) |
+| **AMD** | Lei Zhang, Alexander Weinrauch, Zahi Moudallal, Kyle Wang, Lixun Zhang, Hongtao Yu, Yi Qian, Jungwook Park |
 | **Academia** | Keren Zhou (George Mason University, current), Philippe Tillet (Harvard, former PhD) |
+| **Intel** | masahi, Ilya V (possible) |
+
+---
+
+## Release History & Feature Evolution
+
+Git tags (sorted chronologically):
+
+```
+v0.1 → v0.2.3 → v0.4  (pre-1.0 prototype era)
+v1.0 → v1.1 → v1.1.2  (1.x: initial public release)
+v2.0.0 → v2.1.0       (2.x: MLIR rewrite)
+v3.0.0 → ... → v3.7.0 (3.x: multi-GPU maturity)
+```
+
+Plus special tags: `gfx950-tutorial-v0.1` (AMD tutorial), `isaac` (predecessor reference), `legacy-backend` (pre-MLIR snapshot).
+
+### v0.1 / v0.2.3 / v0.4 — 2021 prototype era
+
+Before the July 2021 OpenAI blog announcing Triton 1.0. `@triton.jit` just born, Python DSL taking shape. Supported basic element-wise, reduction, and matmul kernels. The thesis: a Python DSL for GPU kernels can match hand-written CUDA performance.
+
+### v1.0 — 2021-07-28 🎯 First Public Release
+
+OpenAI blog: "Introducing Triton: Open-source GPU programming for neural networks." Core positioning:
+- **Python DSL + JIT compiler** (`@triton.jit`)
+- **Tile-based programming model** — developer writes block-level ops, compiler handles memory coalescing and shared memory
+- **Autotuner** — select best tile config via GPU benchmark
+- GPU support: Volta (SM70) through Ampere (SM80)
+
+This is the Triton that PyTorch 2.0's inductor would later adopt.
+
+### v1.1 / v1.1.1 / v1.1.2 — 2021–2022
+
+Bug fixes, performance improvements, expanded GPU support. Flash Attention 1/2 ports appeared in the community. Triton started gaining adoption as the go-to tool for custom PyTorch GPU kernels.
+
+### v2.0.0 — 2023-02 🏗️ MLIR Ground-Up Rewrite
+
+**The most significant architectural change in Triton's history.** The backend was completely rewritten from PTX emission to an **MLIR pipeline**:
+
+```
+@triton.jit Python DSL
+    ↓
+Triton IR (tt dialect)
+    ↓
+TritonGPU dialect (ttg)   ← GPU-specific layout/coalescing analysis
+    ↓
+LLVM IR (nvvm/gpu dialect)
+    ↓
+PTX / cubin
+```
+
+**Why a rewrite?** The old backend (direct PTX emission) couldn't handle complex kernel patterns like **back-to-back matmuls** (e.g., Flash Attention pattern: `tl.dot` result fed directly into the next `tl.dot` without going through global memory). MLIR's dialect architecture made each optimization a composable pass.
+
+**What it enabled:**
+- Native support for Flash Attention pattern
+- Better register allocation
+- **Multi-backend foundation** — same pipeline could target CUDA or HIP
+
+This shipped in the same month as PyTorch 2.0 (March 2023), which made Triton the default GPU codegen backend for `torch.compile`. Not a coincidence — the MLIR rewrite was partly driven by inductor's requirements.
+
+### v2.1.0 — 2023
+
+Continued MLIR pipeline improvements. More operator coverage, better Turing/Ampere support.
+
+### v3.0.0 — 2024 🚀 AMD Backend + Hopper Preparation
+
+Major version jump:
+
+- **AMD/HIP backend** officially joins (`third_party/amd/`). Triton is no longer NVIDIA-only. Supports MI250/MI300 series. This is the result of heavy AMD investment.
+- **NVIDIA Hopper (SM90)** foundation — `wgmma` instruction lowering begins. TMA and cluster kernels come later.
+- **TritonGPU dialect layout system** refactored (paving the way for linear layouts).
+
+### v3.1.0 — 2024
+
+Performance improvements, bug fixes, AMD backend maturation.
+
+### v3.2.0 — 2025-01-22
+
+- **NVIDIA Blackwell (SM100)** preliminary support
+- Hopper TMA support continues maturing
+- **AMD MI350 (CDNA3)** support
+- `num_ctas` cluster kernel support
+- Autotune improvements (better caching, warmup logic)
+
+### v3.3.0 — 2025-04-09
+
+- **TLX** (Hongtao Yu's multi-warp orchestration extension) merged
+- **Proton profiler** initial version — Keren Zhou's multi-level adaptive profiler integrated into Triton
+- **Warp specialization** foundation — autoWS pipeline pass
+- AMD gfx942/gfx950 support
+
+### v3.3.1 — 2025-05-29
+
+Bug fix release.
+
+### v3.4.0 — 2025-07-30
+
+- **Gluon architecture** introduced — new frontend IR layer for tensor-level (not block-level) operations. Product of the **Linear Layouts** paper
+- **Linear layouts** — F₂ vector space algebra framework redesigning the tensor layout system, fixing many legacy layout bugs
+- FP8 support improvements
+- AMD ROCm 6.2 support
+
+### v3.5.0 — 2025-10-13
+
+- **TMA (Tensor Memory Accelerator)** mature — H100 TMA descriptors correct, pipeline pass handles `tma.load`
+- **CUDA Tile backend** — NVIDIA-contributed backend compiling Triton to CUDA Tile IR instead of PTX
+- Warp specialization continues strengthening
+- `tl.cat` (tensor concatenation) added
+
+### v3.5.1 — 2025-11-11
+
+Bug fix release.
+
+### v3.6.0 — 2026-01-20
+
+- Scaled BMM (batched matmul with scaling) in frontend
+- `tl.squeeze` / `tl.unsqueeze` — tensor shape manipulation
+- FP8 constant creation from Python DSL
+- AMD gfx1200/gfx1201 (RDNA4) support begins
+- `constexpr` return from JIT functions
+- Build infrastructure overhaul (pre-built wheels for more platforms)
+
+### v3.7.0 — 2026-05-07 (Latest)
+
+- **gfx1250 (RDNA4) maturation** — major AMD GPU backend update
+- **Warp specialization on AMD** — autoWS now works on AMD GPUs
+- **Tensor Data Movement (TDM)** — new data movement abstraction
+- **Warp-pipeline path rewrite** — pipeline scheduler overhaul
+- **Proton profiler production-ready** — standard tool in Triton
+- Linear layouts adoption expanded to more kernels
+- `tl.cat(can_reorder=False)` — non-reordering concatenation
+- `get_int_attr` for out-of-tree IR walks (plugin developer API)
+- Breaking changes section in release notes
+
+### Release cadence
+
+| Version | Date | Interval |
+|---------|------|----------|
+| v3.0.0 | 2024 mid | — |
+| v3.1.0 | 2024 | ~3-4 months |
+| v3.2.0 | 2025-01-22 | ~3 months |
+| v3.3.0 | 2025-04-09 | ~3 months |
+| v3.4.0 | 2025-07-30 | ~4 months |
+| v3.5.0 | 2025-10-13 | ~3 months |
+| v3.6.0 | 2026-01-20 | ~3 months |
+| v3.7.0 | 2026-05-07 | ~4 months |
+
+A new minor release every 3-4 months, with daily commits in between.
+
+---
+
+### Evolution diagram
+
+```
+2021        2022       2023          2024         2025              2026
+v0.4 → v1.0    v1.1    v2.0           v3.0         v3.2  v3.4       v3.7
+│              │       │              │            │     │          │
+Python DSL     PyTorch MLIR          AMD           TMA   Gluon      RDNA4
+prototype      2.0     rewrite       backend       Hopper+Linear    maturation
+              inductor               加入           成熟  Layouts     warp-spec
+              採用                                               on AMD
+```
+
+Three inflection points:
+1. **v1.0** — Python DSL born, tile-based abstraction proven
+2. **v2.0** — MLIR backend rewrite; Triton becomes a real compiler, not a script→PTX translator. Also what made PyTorch 2.0 inductor trust it
+3. **v3.0** — AMD backend joins; NVIDIA-only → multi-GPU platform
+
+---
+
+## Current State: Maturity, Not Stagnation
+
+A reasonable observer might look at the release history and think: "Triton's API barely changed since v1.0. The evolution seems slow."
+
+This is correct as an observation but misses what's actually happening. Here's the distinction:
+
+### What's stable (user-facing API)
+
+The core programming model hasn't changed since v1.0:
+
+```python
+@triton.jit
+def kernel(X, Y, N, BLOCK: tl.constexpr):
+    x = tl.load(X + tl.arange(0, BLOCK), mask=...)
+```
+
+A kernel written in 2021 compiles on Triton 3.7 in 2026 with zero changes. New additions (`tl.squeeze`, `tl.cat(can_reorder=False)`) are marginal. **This is by design** — stability is what allows the ecosystem (PyTorch inductor, Flash Attention, vLLM) to build on Triton without constant breakage.
+
+### What's evolving rapidly (compiler internals)
+
+| Feature | User-visible? |
+|---------|--------------|
+| Linear layouts | No — kernels are just faster and less buggy |
+| Warp specialization (autoWS) | No — compiler does it automatically |
+| TMA descriptor support | No — unless you write advanced Hopper kernels |
+| Proton profiler | Yes — but it's a dev tool, not runtime |
+| AMD backend | Yes — but only if you use AMD GPUs |
+| CUDA Tile backend | No — output format changed under the hood |
+| Pre-built wheels | No — `pip install` is just faster |
+
+### Compare to compilers like LLVM or GCC
+
+LLVM's API has been relatively stable since ~LLVM 10 (2019). But the codegen improvements — new scheduling passes, better register allocation, new target support — are massive. Triton is in the same phase: **platform stability + deep compiler innovation**. Innovation at this depth doesn't surface as flashy API changes.
+
+### What should still concern the project
+
+1. **JIT compile time** — large kernels can take seconds to tens of seconds on first compilation. This is the #1 community complaint.
+2. **Error messages** — cryptic failures like `OutOfResources` or `AssertionError` wrapped in `CompilationError`. Debugging is painful, especially for newcomers.
+3. **Autotune cache not persistent** — every process restart re-learns all shape→config mappings. Production serving pays this cost repeatedly.
+4. **Codebase complexity** — 6,284 commits, 590 contributors, MLIR + Python + C++ hybrid. New contributor onboarding is hard.
+5. **Documentation** — the official docs cover the basics but deep compiler internals are under-documented. Most knowledge lives in GitHub issues and PR descriptions.
+
+### One-phrase summary
+
+> Triton's user-facing API has reached stability, and its innovation has shifted *downward* into the compiler stack — linear layouts, warp specialization, multi-backend support, and profiling infrastructure. This is the natural trajectory of a compiler that has become infrastructure.
 
 ---
 
 ## Why Triton Matters
-
-Triton sits at a unique point in the ML compiler stack:
 
 ```
 PyTorch model
