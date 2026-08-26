@@ -39,6 +39,7 @@ Two kinds of folders:
 - [`hermes_agent_v0.14.0/`](./hermes_agent_v0.14.0/) — NousResearch/hermes-agent v0.14.0 / v2026.5.16: CLI agent, gateway (Telegram / Discord / etc.), ACP, Kanban, cron, multi-provider routing, TUI. *(in progress)*
 - [`prime_rl_v0.5.0/`](./prime_rl_v0.5.0/) — PrimeIntellect-ai/prime-rl v0.5.0 (released 2026-03-30): async RL training (FSDP2 + vLLM), PD-disaggregated inference, MoE EP / context parallelism, verifiers environment integration. *(skeleton)*
 - [`triton/`](./triton/) — **Unversioned reference.** Triton language and compiler: project history and contributors, autotune deep-dive, release-by-release feature evolution, codebase architecture map, and structured study roadmap.
+- [`sglang/`](./sglang/) — **Unversioned reference.** SGLang HiCache deep-dives: write_back vs write_through (and why vLLM/LMCache can't do write_back — architectural analysis with vLLM PR #43946 and TensorRT-LLM comparison), SWA device-only design (why 71.4% of KV stays on GPU).
 
 ## License
 
