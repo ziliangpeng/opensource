@@ -121,6 +121,34 @@ From vLLM core's seat: moderate engineering effort + real correctness risk, not 
 | LMCache | No (write_through only) | No eviction-triggered offload in repo |
 | HF TGI | No | No hierarchical KV offload |
 
+## Assessment: process failure, not design stupidity
+
+### write_through is not without merit
+
+write_through has legitimate advantages: eviction is zero-cost (data is already on host), transfers are spread evenly across decode steps rather than bursting at eviction time, and the consistency model is simpler. SGLang HiCache and TensorRT-LLM both offer write_through as a policy option alongside write_back — the existence of write_through is not the problem.
+
+**vLLM's failure is not choosing the wrong default — it's not offering write_back at all**, while simultaneously ignoring a proof-of-concept PR (#43946) that demonstrates it works with a contained diff and +56% throughput. This is a process failure + priority failure, not a design stupidity.
+
+### The economics have inverted
+
+vLLM's "recompute > data movement" philosophy was coherent when it was established — in the 2-8k context era, recompute was cheap and PCIe reload wasn't worth it. The philosophy has two parts:
+
+1. **v1 deleting V0's swap-based preemption** — still correct. Preemption is an edge case; V0's swap was complex and buggy; short-sequence recompute is cheap.
+2. **Extending "recompute > data movement" to prefix-cache offload** — no longer valid. In the 100k+ context, agentic multi-turn era, prefill cost grows near-quadratically with context length while PCIe reload is linear. The economics have inverted: reload is now cheaper than recompute for long contexts. SGLang and TRT-LLM saw this; vLLM didn't.
+
+PR #43946 sitting for over a year with zero reviewer engagement is direct evidence that vLLM hasn't updated its prior. The framing is not "vLLM is stupid" but "vLLM is ~18 months behind on the long-context transition."
+
+### How bad is it depends on workload
+
+- **Short-context, compute-bound, low prefix-reuse:** Irrelevant. Recompute is sufficient.
+- **Long-context, multi-turn, cache-constrained:** Significant gap. Write_through's mirror provides no real capacity expansion when host ≈ GPU size, and the throughput tax (−41% to −90%) makes it actively harmful in some cases (PR #43946 author measured eager offload performing *worse than no offload at all*).
+
+c.ai's chat workload (Gemma 4, ~15k context, extremely high multi-turn prefix reuse, per-token KV 5.5× larger than Mistral 24B) is squarely in the second category — among the workloads most affected by this gap.
+
+### vLLM is the outlier among major frameworks
+
+In the top-3 high-performance inference frameworks (vLLM / SGLang / TensorRT-LLM), vLLM is the only one without write_back. Adding NVIDIA Dynamo's KVBM (multi-tier eviction-driven offload), the picture is even starker. Many vLLM production deployments offload via LMCache, which is also write_through-style — so the mirror limitation affects the entire vLLM ecosystem, not just native offloading.
+
 ## What it would take to add write_back to vLLM
 
 PR #43946 is a ready-made checklist:
