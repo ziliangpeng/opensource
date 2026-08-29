@@ -4,6 +4,7 @@ Unversioned reference for SGLang (sgl-project/sglang), focusing on subsystems re
 
 ## Notes
 
+- [`project_family_and_omni.md`](./project_family_and_omni.md) — How SGLang grew into a project family (education → tooling → orchestration → engine → modality → operators), and why SGLang-Omni exists: speech/omni serving is a multi-stage heterogeneous pipeline, not one AR loop.
 - [`notes/hicache-write-back-vs-write-through.md`](./notes/hicache-write-back-vs-write-through.md) — HiCache write_back vs write_through: mechanism, throughput tax, retention, and why vLLM/LMCache can't do write_back (architectural analysis with vLLM PR #43946 and TensorRT-LLM comparison).
 - [`notes/hicache-swa-device-only.md`](./notes/hicache-swa-device-only.md) — Why HiCache only offloads FULL KV (not SWA): bounded vs unbounded per-conversation KV, restore asymmetry, and the implementation bug that made SWA host backup useless.
 
